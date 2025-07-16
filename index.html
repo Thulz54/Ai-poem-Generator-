@@ -89,6 +89,7 @@
         <form id="poem-generator-form">
           <input
             type="text"
+            id="prompt-input"
             placeholder="Enter the topic of the French poem"
             autofocus
             required
@@ -110,34 +111,54 @@
       </footer>
     </div>
 
-    <!-- Typewriter plugin from CDN -->
+    <!-- Typewriter and Axios -->
     <script src="https://unpkg.com/typewriter-effect@2.18.1/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
       function generatePoem(event) {
         event.preventDefault();
 
+        const promptInput = document.querySelector("#prompt-input").value.trim();
         const poemElement = document.querySelector("#poem");
-        poemElement.innerHTML = ""; // Clear previous poem
+        poemElement.innerHTML = "Generating your poem...";
 
-        const typewriter = new Typewriter(poemElement, {
-          autoStart: true,
-          delay: 50,
-          cursor: "",
-        });
+        const apiUrl = "https://api.shecodes.io/ai/v1/generate";
+        const apiKey = "{your_api_key}"; // 🔁 Replace with your actual API key
+        const context =
+          "You are a creative French poet AI. Write a beautiful short French poem based on the topic provided.";
 
-        typewriter
-          .typeString("The grave said to the rose,<br>")
-          .pauseFor(500)
-          .typeString("Tears with which dawn waters you.")
-          .start();
+        axios
+          .get(apiUrl, {
+            params: {
+              prompt: promptInput,
+              context: context,
+              key: apiKey,
+            },
+          })
+          .then(function (response) {
+            const poem = response.data.answer;
+            poemElement.innerHTML = "";
+
+            const typewriter = new Typewriter(poemElement, {
+              autoStart: true,
+              delay: 40,
+              cursor: "",
+            });
+
+            typewriter.typeString(poem).start();
+          })
+          .catch(function (error) {
+            poemElement.innerHTML =
+              "Sorry, an error occurred while generating the poem.";
+            console.error("API Error:", error);
+          });
       }
 
-      let poemFormElement = document.querySelector("#poem-generator-form");
+      const poemFormElement = document.querySelector("#poem-generator-form");
       poemFormElement.addEventListener("submit", generatePoem);
     </script>
 
     <script src="src/index.js"></script>
   </body>
 </html>
-            
