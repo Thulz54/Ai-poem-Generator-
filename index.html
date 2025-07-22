@@ -70,6 +70,7 @@
         border-left: 3px solid #885df1;
         box-shadow: 0px 4px 30px 0px rgba(39, 33, 66, 0.03);
         min-height: 80px;
+        color: #272044;
       }
 
       footer {
@@ -82,7 +83,7 @@
   <body>
     <div class="container">
       <header>
-        <h1>AI French Poem Generator</h1>
+        <h1>AI Poem Generator</h1>
       </header>
 
       <main>
@@ -98,7 +99,7 @@
           />
           <input type="submit" class="submit-button" />
         </form>
-        <div class="poem" id="poem"></div>
+        <div class="poem" id="poem">Your poem will appear here...</div>
       </main>
 
       <footer>
@@ -111,7 +112,7 @@
       </footer>
     </div>
 
-    <!-- Typewriter and Axios -->
+   
     <script src="https://unpkg.com/typewriter-effect@2.18.1/dist/core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -121,12 +122,13 @@
 
         const promptInput = document.querySelector("#prompt-input").value.trim();
         const poemElement = document.querySelector("#poem");
-        poemElement.innerHTML = "Generating your poem...";
+
+        poemElement.innerHTML = "⏳ Generating your poem...";
 
         const apiUrl = "https://api.shecodes.io/ai/v1/generate";
-        const apiKey = "{your_api_key}"; // 🔁 Replace with your actual API key
+        const apiKey = "2046c535afeb092fo82f1d306d8a2b2t"; // 🔐 Replace with your real key
         const context =
-          "You are a creative French poet AI. Write a beautiful short French poem based on the topic provided.";
+          "You are a creative English poet AI. Write a beautiful short English poem based on the topic provided.";
 
         axios
           .get(apiUrl, {
@@ -150,8 +152,11 @@
           })
           .catch(function (error) {
             poemElement.innerHTML =
-              "Sorry, an error occurred while generating the poem.";
+              "❌ Sorry, an error occurred while generating the poem.";
             console.error("API Error:", error);
+            if (error.response) {
+              console.error("Server Response:", error.response.data);
+            }
           });
       }
 
@@ -159,6 +164,7 @@
       poemFormElement.addEventListener("submit", generatePoem);
     </script>
 
+    
     <script src="src/index.js"></script>
   </body>
 </html>
